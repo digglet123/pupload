@@ -1,0 +1,50 @@
+h1 {
+  font-size:40px;
+  color: DodgerBlue;
+  text-align: center;
+  font-weight: bold;
+}
+
+#text_label{
+	padding-top: 200px;
+	padding-bottom: 200px;
+	font-size:20px;
+	text-align: center
+}
+
+.progress-label {
+	overflow:hidden;
+  	text-overflow: ellipsis;
+  	white-space: nowrap; 
+}
+
+.touch_area {
+	size:inherit;
+}
+
+.jqDropZone {
+	margin-top: 30px;
+    background: lightgrey;
+    width: 100%;
+    height: 100%;
+    line-height: 200px;
+    text-align: center;
+    font-weight: bold;
+}
+.jqDropZone.in {
+    width: 600px;
+    height: 200px;
+    line-height: 200px;
+    font-size: larger;
+}
+.jqDropZone.hover {
+    background: lawngreen;
+}
+.jqDropZone.fade {
+    -webkit-transition: all 0.3s ease-out;
+    -moz-transition: all 0.3s ease-out;
+    -ms-transition: all 0.3s ease-out;
+    -o-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
+    opacity: 1;
+}

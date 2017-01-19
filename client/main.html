@@ -1,0 +1,59 @@
+<head>
+    <title>P-upload</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="icon" sizes="16x16 32x32 512x512" href="/favicon.ico?v=2">
+</head>
+
+<body>
+  <div class="container">
+  {{#if currentUser}}
+    {{> TopNav}}
+    <div class="row">
+      <h1 class="col-xs-12 col-md-12">P-upload</h1>  
+    </div>
+    {{> upzone }}
+    {{> Info}}
+  {{else}}
+    {{> LoginModal}}
+  {{/if}}
+  </div>
+</body>
+
+<template name="TopNav">
+  <div class="row">
+    <div class="col-xs-8 col-md-10"><label>logged in as: {{currentUser.emails.[0].address}} </label></div>
+    <div class="col-xs-4 col-md-2"><label class="logout pull-right">logout</label></div>
+  </div>  
+</template>
+
+<template name="upzone">
+    {{> upload_bootstrap fileTypes='.jpg' multiple=true callbacks=myCallbacks formData=specificFormData}}
+</template>
+
+<template name="Info">
+<div style="margin-top:2em;">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Modified</th>
+        <th>Owner</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each files}}
+        <tr>
+          <td>{{this}}</td>
+          <td>--</td>
+          <td>--</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>
+</template>
+
+
+
+
