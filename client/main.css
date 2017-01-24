@@ -5,6 +5,12 @@ h1 {
   font-weight: bold;
 }
 
+h4 {
+  overflow:hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 #text_label{
 	padding-top: 200px;
 	padding-bottom: 200px;

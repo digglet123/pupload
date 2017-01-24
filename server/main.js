@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 
 Meteor.startup(() => {
+	exec = Npm.require('child_process').exec;
 	Future = Npm.require('fibers/future');
 	UploadServer.init({
 	    tmpDir: process.env.PWD + '/uploads/tmp',
@@ -16,9 +17,8 @@ Meteor.methods({
 	listContents: function (path) {
 		//Create new future object
 		var future = new Future();	
-		exec = Npm.require('child_process').exec;
 		//Asynchronously execute ls command
-		exec('ls ' + process.env.PWD + '/uploads' + path, function(error, stdout, stderr) {
+		exec('ls ' + process.env.PWD + '/uploads' + path + '/', function(error, stdout, stderr) {
 		  console.log('stdout: ' + stdout);
 		  if(error !== null) {
 		    console.log('exec error: ' + error);
@@ -29,5 +29,15 @@ Meteor.methods({
 		//Wait for promised future value and return
 		var result = future.wait();
 		return result.toString().trim();
+	},
+
+	removeElement: function (path, elementName){
+		exec('rm -rf ' + process.env.PWD + '/uploads' + path + '/' + elementName, function(error, stdout, stderr) {
+		  console.log('stdout: ' + stdout);
+		  if(error !== null) {
+		    console.log('exec error: ' + error);
+		  }
+		});
 	}
+	
 });

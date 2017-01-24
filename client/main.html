@@ -12,7 +12,19 @@
     <div class="row">
       <h1 class="col-xs-12 col-md-12">P-upload</h1>  
     </div>
-    {{> upzone }}
+    <div class="row">
+      <div class="col-xs-12 col-md-12">
+        <h4><span id="navItem">uploads</span> {{#each getPath}} / <span id="navItem">{{this}}</span> {{/each}}</h4>
+      </div>
+    </div>
+    {{> UploadModal}}
+    <div class="row" style="margin-top:2em;">
+      <div class="col-md-12">
+        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal">Upload</button>
+        <button type="button" class="btn btn-danger btn-sm" id="rmBtn">Delete Selected</button> 
+        <button type="button" class="btn btn-default btn-sm" id="mkdirBtn">Create Directory</button>
+      </div>
+    </div>
     {{> Info}}
   {{else}}
     {{> LoginModal}}
@@ -22,13 +34,8 @@
 
 <template name="TopNav">
   <div class="row">
-    <div class="col-xs-8 col-md-10"><label>logged in as: {{currentUser.emails.[0].address}} </label></div>
-    <div class="col-xs-4 col-md-2"><label class="logout pull-right">logout</label></div>
+    <div class="col-xs-12 col-md-12 pull-right"><label class="logout pull-right">logout</label></div>
   </div>  
-</template>
-
-<template name="upzone">
-    {{> upload_bootstrap fileTypes='.jpg' multiple=true callbacks=myCallbacks formData=specificFormData}}
 </template>
 
 <template name="Info">
@@ -36,24 +43,19 @@
   <table class="table">
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Modified</th>
-        <th>Owner</th>
+        <th class="col-xs-12 col-md-12">Name</th>
       </tr>
     </thead>
     <tbody>
       {{#each files}}
         <tr>
-          <td>{{this}}</td>
-          <td>--</td>
-          <td>--</td>
+            <td class="col-xs-12 col-md-12" id="elementName">{{this}}</td>
         </tr>
       {{/each}}
     </tbody>
   </table>
 </div>
 </template>
-
 
 
 
