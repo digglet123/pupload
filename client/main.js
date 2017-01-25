@@ -2,7 +2,6 @@ import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
 import './main.html';
 
-//TODO: Escape spaces and parenthases in file names - Messes with remove function
 
 //Array which contains current folder contents (Folders and files)
 Session.set("contentArr", []);

@@ -32,7 +32,7 @@ Meteor.methods({
 	},
 
 	removeElement: function (path, elementName){
-		exec('rm -rf ' + process.env.PWD + '/uploads' + path + '/' + elementName, function(error, stdout, stderr) {
+		exec('rm -rf ' + "'" + process.env.PWD + '/uploads' + path + '/' + elementName + "'", function(error, stdout, stderr) {
 		  console.log('stdout: ' + stdout);
 		  if(error !== null) {
 		    console.log('exec error: ' + error);
