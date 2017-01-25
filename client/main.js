@@ -2,6 +2,7 @@ import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
 import './main.html';
 
+//TODO: Wait for server callback before entering a directory
 
 //Array which contains current folder contents (Folders and files)
 Session.set("contentArr", []);
@@ -37,6 +38,16 @@ function removeCall(path, elementName){
 		listCall(path);
 	});
 
+}
+
+function createDirCall(path, name){
+	Meteor.call("createDirectory", path, name, function(error){
+		if(error){
+			console.log(error.reason);
+			return;
+		}
+		listCall(path);
+	});
 }
 
 //Converts array to a path string
@@ -122,6 +133,14 @@ Template.Info.events ({
 	},
 	'click #rmBtn': function(event){
 		console.log(event.target.parentElement);
+	}
+});
+
+Template.DirectoryModal.events({
+	'submit .newFolder':function(){
+		console.log('success')
+		//var name = $('#dirName').val();
+		//createDirCall(arrayToPath(Session.get("pathArr")), name);
 	}
 });
 

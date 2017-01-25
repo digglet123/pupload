@@ -17,12 +17,13 @@
         <h4><span id="navItem">uploads</span> {{#each getPath}} / <span id="navItem">{{this}}</span> {{/each}}</h4>
       </div>
     </div>
+    {{> DirectoryModal}}
     {{> UploadModal}}
     <div class="row" style="margin-top:2em;">
       <div class="col-md-12">
-        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal">Upload</button>
-        <button type="button" class="btn btn-danger btn-sm" id="rmBtn">Delete Selected</button> 
-        <button type="button" class="btn btn-default btn-sm" id="mkdirBtn">Create Directory</button>
+        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myUploadModal">Upload</button>  
+        <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#myDirectoryModal">Create Directory</button>
+        <button type="button" class="btn btn-danger btn-sm pull-right" id="rmBtn">Delete Selected</button> 
       </div>
     </div>
     {{> Info}}

@@ -18,7 +18,7 @@ Meteor.methods({
 		//Create new future object
 		var future = new Future();	
 		//Asynchronously execute ls command
-		exec('ls ' + process.env.PWD + '/uploads' + path + '/', function(error, stdout, stderr) {
+		exec('ls ' + "'" + process.env.PWD + '/uploads' + path + '/' + "'", function(error, stdout, stderr) {
 		  console.log('stdout: ' + stdout);
 		  if(error !== null) {
 		    console.log('exec error: ' + error);
@@ -38,6 +38,16 @@ Meteor.methods({
 		    console.log('exec error: ' + error);
 		  }
 		});
+	},
+
+	createDirectory: function (path, directoryName){
+		exec('mkdir ' + "'" + process.env.PWD + '/uploads' + path + '/' + directoryName + "'", function(error, stdout, stderr) {
+		  console.log('stdout: ' + stdout);
+		  if(error !== null) {
+		    console.log('exec error: ' + error);
+		  }
+		});
 	}
+
 	
 });
