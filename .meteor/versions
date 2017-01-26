@@ -15,7 +15,6 @@ caching-compiler@1.1.9
 caching-html-compiler@1.1.0
 callback-hook@1.0.10
 check@1.2.4
-chriswessels:hammer@4.0.2
 coffeescript@1.0.17
 ddp@1.2.5
 ddp-client@1.2.9

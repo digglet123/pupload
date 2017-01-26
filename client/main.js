@@ -22,7 +22,8 @@ function listCall(path){
 	    return;
 	  }
 	  Session.set("contentArr", result.split('\n'));
-
+	  console.log('listCall completed');
+	  console.log(Session.get("contentArr"));
 	});
 
 }
@@ -30,23 +31,25 @@ function listCall(path){
 //Requests server to delete selected element
 function removeCall(path, elementName){
 
-	Meteor.call("removeElement", path, elementName, function(error){
+	Meteor.call("removeElement", path, elementName, function(error, result){
 		if(error){
 			console.log(error.reason);
 			return;
 		}
 		listCall(path);
+		console.log('removeCall completed');
 	});
 
 }
-
+//Requests server ro create a directory
 function createDirCall(path, name){
-	Meteor.call("createDirectory", path, name, function(error){
+	Meteor.call("createDirectory", path, name, function(error, result){
 		if(error){
 			console.log(error.reason);
 			return;
 		}
 		listCall(path);
+		console.log('createDirCall completed');
 	});
 }
 
@@ -77,6 +80,8 @@ Template.body.helpers({
 });
 
 Template.body.events({
+
+	//Navigation bar logic
 	'click #navItem': function(event) {
 		var newArr = Session.get("pathArr");
 		if(event.target.innerHTML == 'uploads'){
@@ -96,20 +101,26 @@ Template.body.events({
 });
 
 
-//Logging out
 Template.TopNav.events ({
-
+	//Logging out
 	'click .logout': function() {
 		Meteor.logout();
 	}
 
 });
 
-//Main view helpers (Folders)
+
 Template.Info.helpers ({
 
 	files: function () {
-		return Session.get("contentArr");
+		//Check if folder is empty
+		if(Session.get("contentArr")[0] === ''){
+			return null;	
+		}
+		else {
+			return Session.get("contentArr");
+		}
+		
 	}
 });
 
@@ -124,7 +135,6 @@ Template.Info.events ({
 	//Updates pathArr and contentArr when user clicks folder name and
 	'dblclick #elementName': function(event){
 		if(Session.get("contentArr").some(function(name){return name === event.target.innerHTML && name !== "";})){
-			console.log(Session.get("contentArr"));
 			var newArr = Session.get("pathArr");
 			newArr.push(event.target.innerHTML);
 			Session.set("pathArr", newArr);
@@ -137,10 +147,13 @@ Template.Info.events ({
 });
 
 Template.DirectoryModal.events({
-	'submit .newFolder':function(){
-		console.log('success')
-		//var name = $('#dirName').val();
-		//createDirCall(arrayToPath(Session.get("pathArr")), name);
+	'submit .newFolder':function(event){
+		var name = $('#dirName').val();
+		createDirCall(arrayToPath(Session.get("pathArr")), name);
+		$('#dirName').val("");
+
+		//Does not cause a reroute
+		return false;
 	}
 });
 
