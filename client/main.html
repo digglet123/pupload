@@ -1,5 +1,5 @@
 <head>
-    <title>P-upload</title>
+    <title>P-Upload</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <link rel="icon" sizes="16x16 32x32 512x512" href="/favicon.ico?v=2">
@@ -10,11 +10,11 @@
   {{#if currentUser}}
     {{> TopNav}}
     <div class="row">
-      <h1 class="col-xs-12 col-md-12">P-upload</h1>  
+      <h1 class="col-xs-12 col-md-12 unselectable">P-Upload<img src="/image_assets/pupload.png" alt="image" style="margin-left: 1em; height: 2em"></h1>
     </div>
     <div class="row">
       <div class="col-xs-12 col-md-12">
-        <h4 class="unselectable"><span id="navItem">uploads</span> {{#each getPath}} / <span id="navItem">{{this}}</span> {{/each}}</h4>
+        <h4 class="unselectable"><span id="navItem">Uploads</span> {{#each getPath}} &rtrif;  <span id="navItem">{{this}}</span> {{/each}}</h4>
       </div>
     </div>
     {{> DirectoryModal}}
@@ -45,12 +45,16 @@
     <thead>
       <tr class="unselectable">
         <th class="col-xs-12 col-md-12">Name</th>
+        <th>Modified</th>
       </tr>
     </thead>
     <tbody>
       {{#each files}}
-        <tr class="unselectable">
-            <td class="col-xs-12 col-md-12" id="elementName">{{this}}</td>
+        <tr class="unselectable elementRow">
+            <td class="col-xs-8 col-md-8"><img src="/image_assets/{{getImage this}}" alt="image" style="width:2em; height:2em;">
+            <label class="elementName" style="margin-left: 1em;">{{this}}</label>
+            </td>
+            <td class="col-xs-4 col-md-4"><label>29/01/2017</label></td>
         </tr>
       {{/each}}
     </tbody>

@@ -14,11 +14,11 @@ Meteor.startup(() => {
 Meteor.methods({
 	
 	//Lists all the files in a directory
-	listContents: function (path) {
+	listContents: function (path, type) {
 		//Create new future object
 		var future = new Future();	
 		//Asynchronously execute ls command
-		exec('ls ' + "'" + process.env.PWD + '/uploads' + path + '/' + "'", function(error, stdout, stderr) {
+		exec('cd ' + "'" + process.env.PWD + '/uploads' + path + '/' + "'; find * -maxdepth 0 -type " + type, function(error, stdout, stderr) {
 		  console.log('stdout: ' + stdout);
 		  if(error !== null) {
 		    console.log('exec error: ' + error);
