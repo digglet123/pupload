@@ -28,4 +28,5 @@ accounts-password
 useraccounts:bootstrap
 raix:handlebar-helpers
 meteorhacks:npm
+iron:router
 session

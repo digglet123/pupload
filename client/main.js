@@ -86,13 +86,13 @@ Meteor.startup(function() {
 
 });
 
-Template.body.helpers({
+Template.Home.helpers({
 	getPath:function(){
 		return Session.get("pathArr");
 	}
 });
 
-Template.body.events({
+Template.Home.events({
 
 	//Navigation bar logic
 	'click #navItem': function(event) {

@@ -5,33 +5,38 @@
     <link rel="icon" sizes="16x16 32x32 512x512" href="/favicon.ico?v=2">
 </head>
 
-<body>
-  <div class="container">
-  {{#if currentUser}}
-    {{> TopNav}}
-    <div class="row">
-      <h1 class="col-xs-12 col-md-12 unselectable">P-Upload<img src="/image_assets/pupload.png" alt="image" style="margin-left: 1em; height: 2em"></h1>
-    </div>
-    <div class="row">
-      <div class="col-xs-12 col-md-12">
-        <h4 class="unselectable"><span id="navItem">Uploads</span> {{#each getPath}} &rtrif;  <span id="navItem">{{this}}</span> {{/each}}</h4>
+<template name="Home">
+
+  <body>
+    <div class="container">
+    {{#if currentUser}}
+      {{> TopNav}}
+      <div class="row">
+        <h1 class="col-xs-12 col-md-12 unselectable">P-Upload<img src="/image_assets/pupload.png" alt="image" style="margin-left: 1em; height: 2em"></h1>
       </div>
-    </div>
-    {{> DirectoryModal}}
-    {{> UploadModal}}
-    <div class="row" style="margin-top:2em;">
-      <div class="col-md-12">
-        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myUploadModal">Upload</button>  
-        <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#myDirectoryModal">Create Directory</button>
-        <button type="button" class="btn btn-danger btn-sm pull-right" id="rmBtn">Delete Selected</button> 
+      <div class="row">
+        <div class="col-xs-12 col-md-12">
+          <h4 class="unselectable"><span id="navItem">Uploads</span> {{#each getPath}} &rtrif;  <span id="navItem">{{this}}</span> {{/each}}</h4>
+        </div>
       </div>
+      {{> DirectoryModal}}
+      {{> UploadModal}}
+      <div class="row" style="margin-top:2em;">
+        <div class="col-md-12">
+          <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myUploadModal">Upload</button>  
+          <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#myDirectoryModal">Create Directory</button>
+          <button type="button" class="btn btn-danger btn-sm pull-right" id="rmBtn">Delete Selected</button> 
+        </div>
+      </div>
+      {{> Info}}
+    {{else}}
+      {{> LoginModal}}
+    {{/if}}
     </div>
-    {{> Info}}
-  {{else}}
-    {{> LoginModal}}
-  {{/if}}
-  </div>
-</body>
+  </body>
+  
+</template>
+
 
 <template name="TopNav">
   <div class="row">

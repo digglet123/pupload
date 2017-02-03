@@ -19,9 +19,9 @@ h4 {
 }
 
 .progress-label {
-	overflow:hidden;
-  	text-overflow: ellipsis;
-  	white-space: nowrap; 
+  overflow:hidden;
+	text-overflow: ellipsis;
+  white-space: nowrap; 
 }
 
 .touch_area {
