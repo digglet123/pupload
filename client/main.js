@@ -188,7 +188,16 @@ Template.Info.events ({
 		}
 		//If clicked element is a file...
 		else{
-			//call server to move requested file from upload location to public download staging folder
+			var fileName = $(event.currentTarget).find('.elementName').html();
+			Meteor.call("sendRoute", arrayToPath(Session.get("pathArr")), fileName , function(error, response){
+				if(error){
+					console.log(error.reason);
+					Router.go(arrayToPath(Session.get("pathArr")) + '/' + fileName);
+				}
+				else{
+					Router.go(arrayToPath(Session.get("pathArr")) + '/' + fileName);
+				}
+			});
 		}
 	}
 });
@@ -199,7 +208,7 @@ Template.DirectoryModal.events({
 		createDirCall(arrayToPath(Session.get("pathArr")), name);
 		$('#dirName').val("");
 
-		//Does not cause a reroute
+		//Prevents reload of page 
 		return false;
 	}
 });

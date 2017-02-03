@@ -47,6 +47,15 @@ Meteor.methods({
 		    console.log('exec error: ' + error);
 		  }
 		});
+	},
+
+	sendRoute: function(path, fileName){
+		fileSystem = require('fs');
+		Router.route(path + '/' + fileName, function () {
+			var filePath = process.env.PWD + '/uploads' + path + '/' + fileName;
+		    var readStream = fileSystem.createReadStream(filePath);
+		    readStream.pipe(this.response);
+		}, {where: 'server'});
 	}
 
 	
