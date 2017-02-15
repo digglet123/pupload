@@ -6,10 +6,8 @@
 </head>
 
 <template name="Home">
-
   <body>
     <div class="container">
-    {{#if currentUser}}
       {{> TopNav}}
       <div class="row">
         <h1 class="col-xs-12 col-md-12 unselectable">P-Upload<img src="/image_assets/pupload.png" alt="image" style="margin-left: 1em; height: 2em"></h1>
@@ -29,9 +27,6 @@
         </div>
       </div>
       {{> Info}}
-    {{else}}
-      {{> LoginModal}}
-    {{/if}}
     </div>
   </body>
   
@@ -40,7 +35,7 @@
 
 <template name="TopNav">
   <div class="row">
-    <div class="col-xs-12 col-md-12 pull-right"><label class="logout pull-right">logout</label></div>
+    <div class="col-xs-12 col-md-12 pull-right"><label class="logout pull-right">logout {{currentUser.username}}</label></div>
   </div>  
 </template>
 

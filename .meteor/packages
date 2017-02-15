@@ -30,3 +30,4 @@ raix:handlebar-helpers
 meteorhacks:npm
 iron:router
 session
+meteorhacks:fast-render

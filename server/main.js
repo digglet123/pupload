@@ -11,6 +11,8 @@ Meteor.startup(() => {
 	});
 });
 
+
+
 Meteor.methods({
 	
 	//Lists all the files in a directory
@@ -50,12 +52,37 @@ Meteor.methods({
 	},
 
 	sendRoute: function(path, fileName){
-		fileSystem = require('fs');
-		Router.route(path + '/' + fileName, function () {
-			var filePath = process.env.PWD + '/uploads' + path + '/' + fileName;
-		    var readStream = fileSystem.createReadStream(filePath);
-		    readStream.pipe(this.response);
-		}, {where: 'server'});
+		//See if the route already exists
+	    try {
+	    	//set the route
+	    	Router.route(encodeURI(path + '/' + fileName), function () {
+	    		var user = null;
+	    		try {
+	    			//try to find login token from request
+	    			var hashedToken = Accounts._hashLoginToken(this.request.cookies.meteor_login_token);
+			    	user = Meteor.users.findOne({"services.resume.loginTokens.hashedToken": hashedToken});
+	    		} catch(e) {
+	    			//if no login token can be found respond with a 404
+	    			this.response.writeHead(404);
+	    			this.response.end( "Access denied!" );
+	    		}
+				if (user){
+					fileSystem = require('fs');
+					var res = this.response;
+					var filePath = process.env.PWD + '/uploads' + path + '/' + fileName;
+				    var readStream = fileSystem.createReadStream(filePath);
+				    readStream.pipe(res);
+				}
+				else{
+					this.response.writeHead(404);
+	    			this.response.end( "Access denied!" );
+				}
+				
+			}, {where: 'server'});
+	    } catch(e) {
+	    	return;
+	    }
+		
 	}
 
 	
