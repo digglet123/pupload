@@ -14,7 +14,7 @@
       </div>
       <div class="row">
         <div class="col-xs-12 col-md-12">
-          <h4 class="unselectable"><span id="navItem">Uploads</span> {{#each getPath}} &rtrif;  <span id="navItem">{{this}}</span> {{/each}}</h4>
+          <h4 class="unselectable"><span id="navItem" style="cursor:pointer">Uploads</span> {{#each getPath}} &rtrif;  <span id="navItem" style="cursor:pointer">{{this}}</span> {{/each}}</h4>
         </div>
       </div>
       {{> DirectoryModal}}
@@ -50,9 +50,9 @@
     </thead>
     <tbody>
       {{#each files}}
-        <tr class="unselectable elementRow">
+        <tr class="unselectable elementRow" style="cursor:pointer">
             <td class="col-xs-8 col-md-8"><img src="/image_assets/{{getImage this}}" alt="image" style="width:2em; height:2em;">
-            <label class="elementName" style="margin-left: 1em;">{{this}}</label>
+            <label class="elementName" style="margin-left: 1em; cursor:pointer">{{this}}</label>
             </td>
             <td class="col-xs-4 col-md-4"><label>29/01/2017</label></td>
         </tr>

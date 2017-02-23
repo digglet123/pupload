@@ -31,3 +31,4 @@ meteorhacks:npm
 iron:router
 session
 meteorhacks:fast-render
+jparker:crypto-md5

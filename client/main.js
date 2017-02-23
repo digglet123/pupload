@@ -32,14 +32,15 @@ Router.onBeforeAction(function () {
 
 //Requests server to send folder contents. Populates folderArr with folder contents. refreshCallback is a function which can be called after asynchronous server call is completed.
 function listCall(path, refreshCallback){
-
-	Meteor.call("listContents", path, "d", function(error, result){
+	Session.set("folderArr", []);
+	Session.set("fileArr", []);
+	Meteor.call("listContents", path, "folder", function(error, result){
 	  if(error){
 	    console.log(error.reason);
 	    return;
 	  }
 	  Session.set("folderArr", result.split('\n'));
-	  Meteor.call("listContents", path, "f", function(error, result){
+	  Meteor.call("listContents", path, "file", function(error, result){
 	  if(error){
 	    console.log(error.reason);
 	    return;
@@ -51,9 +52,9 @@ function listCall(path, refreshCallback){
 }
 
 //Requests server to delete selected element
-function removeCall(path, elementName){
+function removeCall(path, elementName, type){
 
-	Meteor.call("removeElement", path, elementName, function(error, result){
+	Meteor.call("removeElement", path, elementName, type, function(error, result){
 		if(error){
 			console.log(error.reason);
 			return;
@@ -73,30 +74,34 @@ function createDirCall(path, name){
 	});
 }
 
+/*
 function pathToArray(path){
 	if(path !== ''){
-		var arr = path.split('/');
+		var arr = path.split('\\');
 		arr.shift();
 		return arr;
 	}
 }
+*/
 
 //Converts array to a path string
-function arrayToPath(array){
+function arrayToPath(array, type){
+	var separator = type==="fileUrl"?'\\':'/';
 	var pathString = '';
 	if(array.length > 0){
 		array.forEach( function(element, index) {
-			pathString += '/' + element;
+			pathString += separator + element;
 		});
 	}
 	
-	return pathString;
+	return pathString.trim();
 }
 
 //Client start-up methods
 Meteor.startup(function() {
+
 	//Get index of folder designated by path
-	listCall(arrayToPath(Session.get("pathArr")), function(){return null;});
+	listCall(arrayToPath(Session.get("pathArr"), "fileUrl"), function(){return null;});
 
 });
 
@@ -110,6 +115,9 @@ Template.Home.events({
 
 	//Navigation bar logic
 	'click #navItem': function(event) {
+		console.log(Session.get("folderArr").toString());
+		console.log(Session.get("fileArr").toString());
+		console.log(selected);
 		var newArr = Session.get("pathArr");
 		if(event.target.innerHTML == 'Uploads'){
 			Session.set("pathArr", []);
@@ -120,11 +128,17 @@ Template.Home.events({
 			}
 			Session.set("pathArr", newArr);
 		}
-		listCall(arrayToPath(Session.get("pathArr")), function(){return null;});
+		listCall(arrayToPath(Session.get("pathArr"), "fileUrl"), function(){return null;});
 	},
 	'click #rmBtn': function() {
-		removeCall(arrayToPath(Session.get("pathArr")), selected);
-		selected=null;
+		if(Session.get("folderArr").some(function(name){return name === selected && name !== "";})){
+			removeCall(arrayToPath(Session.get("pathArr"), "fileUrl"), selected, "folder");
+			selected=null;
+		}
+		else {
+			removeCall(arrayToPath(Session.get("pathArr"), "fileUrl"), selected, "file");
+			selected=null;
+		}
 	}
 });
 
@@ -142,11 +156,16 @@ Template.Info.helpers ({
 
 	files: function () {
 		//Concatenate folder and file Arrays and exclude empty elements.
-		return Session.get("folderArr").concat(Session.get("fileArr")).filter(function(value){return value !== '';});
+		var arr = Session.get("folderArr").concat(Session.get("fileArr")).filter(function(value){return value !== '';});
+		//Trim the element name strings
+		arr.forEach(function(part, index, theArray) {
+		  theArray[index] = theArray[index].trim();
+		});
+		return arr;
 	},
 	//Get correct image icon for folder contents
 	getImage: function(element) {
-		if(Session.get("folderArr").some(function(name){return name === element;})){
+		if(Session.get("folderArr").some(function(name){return name.trim() === element;})){
 			return "folder.png";
 		}
 		else{
@@ -193,25 +212,19 @@ Template.Info.events ({
 	//Updates pathArr and folderArr when user clicks folder name and
 	'dblclick .elementRow': function(event){
 		//If clicked element is a folder...
-		if(Session.get("folderArr").some(function(name){return name === $(event.currentTarget).find('.elementName').html() && name !== "";})){
+		if(Session.get("folderArr").some(function(name){return name.trim() === selected && name !== "";})){
 			selected = null;
 			var newArr = Session.get("pathArr");
 			newArr.push($(event.currentTarget).find('.elementName').html());
 			//List contents of new path and then set the new path as pathArr 	
-			listCall(arrayToPath(newArr),function(){Session.set("pathArr", newArr);});
+			listCall(arrayToPath(newArr, "fileUrl"),function(){Session.set("pathArr", newArr);});
 		}
 		//If clicked element is a file...
+		//TODO SOME ROUTES ARE NOT CREATED!
 		else{
 			var fileName = $(event.currentTarget).find('.elementName').html(); 
-			console.log(fileName);
-			Meteor.call("sendRoute", arrayToPath(Session.get("pathArr")), fileName , function(error, response){
-				if(error){
-					console.log(error.reason);
-					Router.go(arrayToPath(Session.get("pathArr")) + '/' + fileName);
-				}
-				else{
-					Router.go(arrayToPath(Session.get("pathArr")) + '/' + fileName);
-				}
+			Meteor.call("sendRoute", arrayToPath(Session.get("pathArr"), "routeUrl"), fileName, function(error, response){
+					Router.go(encodeURI(arrayToPath(Session.get("pathArr"), "routeUrl") + '/' + fileName));
 			});
 		}
 	}
@@ -220,29 +233,30 @@ Template.Info.events ({
 Template.DirectoryModal.events({
 	'submit .newFolder':function(event){
 		var name = $('#dirName').val();
-		createDirCall(arrayToPath(Session.get("pathArr")), name);
+		createDirCall(arrayToPath(Session.get("pathArr"), "fileUrl"), name);
 		$('#dirName').val("");
 
 		//Prevents reload of page 
 		return false;
 	}
 });
-
+	
 
 //Upload helpers
 Template.Upzone.helpers({
 
   myCallbacks: function() {
+  	
     return {
     	formData: function() {
     		return {
+
     			id: this._id,
-      			path: arrayToPath(Session.get("pathArr"))+ '/'
+      			path: (arrayToPath(Session.get("pathArr"), "routeUrl") + '/')
     		}; 
     	},
-
         finished: function(index, fileInfo, context) {
-        	listCall(arrayToPath(Session.get("pathArr")), function(){return null;});
+        	listCall(arrayToPath(Session.get("pathArr"), "fileUrl"), function(){return null;});
         }
     };
   }
