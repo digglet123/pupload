@@ -30,3 +30,8 @@ useraccounts:bootstrap
 raix:handlebar-helpers
 meteorhacks:npm
 session
+<<<<<<< Updated upstream
+=======
+meteorhacks:fast-render
+jparker:crypto-md5
+>>>>>>> Stashed changes
