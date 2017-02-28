@@ -16,3 +16,5 @@
    * meteor
 6. Test the app:
    * Go to http://localhost:3000 with your browser
+7. Temporary files and uploaded files go to .tmp and .uploads respectively inside the app root folder. 
+   * In the windows branch the paths have to be set manually in settings.json
