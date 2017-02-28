@@ -1,8 +1,8 @@
 # pupload
 
-* This is a "dropbox-clone" meteor application for uploading files onto the server where it is deployed.
+* This is a work-in-progress "dropbox-clone" meteor application for uploading files onto the server where it is deployed.
 
-##Instructions
+## Instructions
 
 1. Install Meteor:
    * curl https://install.meteor.com/ | sh
