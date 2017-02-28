@@ -1,11 +1,16 @@
 import { Meteor } from 'meteor/meteor';
 
+var upPath = Meteor.settings.upPath;
+var tmpPath = Meteor.settings.tmpPath;
+
 Meteor.startup(() => {
+	console.log(upPath);
+	console.log(tmpPath);
 	exec = Npm.require('child_process').exec;
 	Future = Npm.require('fibers/future');
 	UploadServer.init({
-	    tmpDir: 'y:\\tmp',
-	    uploadDir: 'y:\\mikko', //Root upload directory
+	    tmpDir: tmpPath,
+	    uploadDir: upPath, //Root upload directory
 	    getDirectory: function(fileInfo, formData) { return formData.path;}, //Function which controlls subdirectory
 	    checkCreateDirectories: true //create the directories for you
 	});
@@ -25,7 +30,7 @@ Meteor.methods({
 		var future = new Future();	
 		exec = Npm.require('child_process').exec;
 		//Asynchronously execute ls command
-		exec('chcp 65001 | dir /b ' + cmd + ' "y:\\mikko' + path + '"',{shell: 'cmd.exe'}, function(error, stdout, stderr) {
+		exec('chcp 65001 | dir /b ' + cmd + ' "' + upPath + path + '"',{shell: 'cmd.exe'}, function(error, stdout, stderr) {
 		  console.log('stdout: ' + stdout);
 		  if(error !== null) {
 		    console.log('exec error: ' + error);
@@ -40,7 +45,7 @@ Meteor.methods({
 
 	removeElement: function (path, elementName, type){
 		var cmd = type === "folder" ? "rmdir /S /Q": "del";
-		exec(cmd + ' "y:\\mikko' + path + '\\' + elementName + '"',{shell: 'cmd.exe'}, function(error, stdout, stderr) {
+		exec(cmd + ' "' + upPath + path + '\\' + elementName + '"',{shell: 'cmd.exe'}, function(error, stdout, stderr) {
 		  console.log('stdout: ' + stdout);
 		  if(error !== null) {
 		    console.log('exec error: ' + error);
@@ -49,7 +54,7 @@ Meteor.methods({
 	},
 
 	createDirectory: function (path, directoryName){
-		exec('mkdir ' + '"' + 'y:\\mikko' + path + '\\' + directoryName + '"', function(error, stdout, stderr) {
+		exec('mkdir ' + '"' + upPath + path + '\\' + directoryName + '"', function(error, stdout, stderr) {
 		  console.log('stdout: ' + stdout);
 		  if(error !== null) {
 		    console.log('exec error: ' + error);
@@ -76,7 +81,7 @@ Meteor.methods({
 				if (user){
 					fileSystem = require('fs');
 					var res = this.response;
-					var filePath = 'y:\\mikko' + path.replace("/","\\") + '\\' + fileName;
+					var filePath = upPath + path.replace("/","\\") + '\\' + fileName;
 				    var readStream = fileSystem.createReadStream(filePath);
 				    readStream.pipe(res);
 				}
