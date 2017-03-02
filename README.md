@@ -17,4 +17,13 @@
 6. Test the app:
    * Go to http://localhost:3000 with your browser
 7. Temporary files and uploaded files go to .tmp and .uploads respectively inside the app root folder. 
-   * In the windows branch the paths have to be set manually in settings.json
+
+## Windows specific instructions
+
+1. After cloning switch to windows branch
+   * git checkout windows
+2. Manually set temp and upload paths in settings.json
+
+3. Run the application with the command
+   * meteor --settings settings.json
+   
