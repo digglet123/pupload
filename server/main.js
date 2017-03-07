@@ -12,6 +12,7 @@ Meteor.startup(() => {
 	    tmpDir: tmpPath,
 	    uploadDir: upPath, //Root upload directory
 	    getDirectory: function(fileInfo, formData) { return formData.path;}, //Function which controlls subdirectory
+	    getFileName: function(fileInfo, formData) { return fileInfo.name;},
 	    checkCreateDirectories: true //create the directories for you
 	});
 });
@@ -67,7 +68,7 @@ Meteor.methods({
 		//See if the route already exists
 	    try {
 	    	//set the route
-	    	Router.route(encodeURI(path + '/' + fileName), function () {
+	    	Router.route(escape(path + '/' + fileName), function () {
 	    		var user = null;
 	    		try {
 	    			//try to find login token from request

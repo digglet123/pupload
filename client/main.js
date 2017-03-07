@@ -74,16 +74,6 @@ function createDirCall(path, name){
 	});
 }
 
-/*
-function pathToArray(path){
-	if(path !== ''){
-		var arr = path.split('\\');
-		arr.shift();
-		return arr;
-	}
-}
-*/
-
 //Converts array to a path string
 function arrayToPath(array, type){
 	var separator = type==="fileUrl"?'\\':'/';
@@ -223,9 +213,7 @@ Template.Info.events ({
 		//TODO SOME ROUTES ARE NOT CREATED!
 		else{
 			var fileName = $(event.currentTarget).find('.elementName').html(); 
-			Meteor.call("sendRoute", arrayToPath(Session.get("pathArr"), "routeUrl"), fileName, function(error, response){
-					Router.go(encodeURI(arrayToPath(Session.get("pathArr"), "routeUrl") + '/' + fileName));
-			});
+			Router.go(escape(arrayToPath(Session.get("pathArr"), "routeUrl") + '/' + fileName));
 		}
 	}
 });
@@ -250,13 +238,13 @@ Template.Upzone.helpers({
     return {
     	formData: function() {
     		return {
-
     			id: this._id,
       			path: (arrayToPath(Session.get("pathArr"), "routeUrl") + '/')
     		}; 
     	},
         finished: function(index, fileInfo, context) {
         	listCall(arrayToPath(Session.get("pathArr"), "fileUrl"), function(){return null;});
+        	Meteor.call("sendRoute", arrayToPath(Session.get("pathArr"), "routeUrl"), fileInfo.name);
         }
     };
   }
