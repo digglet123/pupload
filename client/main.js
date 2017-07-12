@@ -4,6 +4,13 @@ import './main.html';
 
 //TODO: Wait for server callback before entering a directory
 
+//Create a new cookie when a user logs in
+//Update the cookie whenever they log in or out
+Tracker.autorun(function() {
+     Cookie.set("meteor_user_id", Meteor.userId());
+     Cookie.set("meteor_token", localStorage.getItem("Meteor.loginToken"));
+});
+
 //Array which contains current subfolders
 Session.set("folderArr", []);
 
@@ -19,7 +26,6 @@ var selected = null;
 Router.onBeforeAction(function () {
   // all properties available in the route function
   // are also available here such as this.params
-
   if (!Meteor.userId()) {
     // if the user is not logged in, render the Login template
     this.render('LoginModal');
@@ -59,7 +65,9 @@ function removeCall(path, elementName, type){
 			console.log(error.reason);
 			return;
 		}
-		listCall(path, function(){return null;});
+		setTimeout(function(){
+    		listCall(path, function(){return null;});
+		}, 1000);
 	});
 
 }
@@ -70,7 +78,9 @@ function createDirCall(path, name){
 			console.log(error.reason);
 			return;
 		}
-		listCall(path, function(){return null;});
+		setTimeout(function(){
+    		listCall(path, function(){return null;});
+		}, 1000);
 	});
 }
 
@@ -83,7 +93,7 @@ function arrayToPath(array, type){
 			pathString += separator + element;
 		});
 	}
-	
+
 	return pathString.trim();
 }
 
@@ -206,14 +216,16 @@ Template.Info.events ({
 			selected = null;
 			var newArr = Session.get("pathArr");
 			newArr.push($(event.currentTarget).find('.elementName').html());
-			//List contents of new path and then set the new path as pathArr 	
+			//List contents of new path and then set the new path as pathArr
 			listCall(arrayToPath(newArr, "fileUrl"),function(){Session.set("pathArr", newArr);});
 		}
 		//If clicked element is a file...
 		//TODO SOME ROUTES ARE NOT CREATED!
 		else{
-			var fileName = $(event.currentTarget).find('.elementName').html(); 
-			Router.go(escape(arrayToPath(Session.get("pathArr"), "routeUrl") + '/' + fileName));
+      var fileName = $(event.currentTarget).find('.elementName').html();
+      Meteor.call("sendRoute", arrayToPath(Session.get("pathArr"), "routeUrl"), fileName, function(){
+  			Router.go(escape(arrayToPath(Session.get("pathArr"), "routeUrl") + '/' + fileName));
+      });
 		}
 	}
 });
@@ -224,29 +236,27 @@ Template.DirectoryModal.events({
 		createDirCall(arrayToPath(Session.get("pathArr"), "fileUrl"), name);
 		$('#dirName').val("");
 
-		//Prevents reload of page 
+		//Prevents reload of page
 		return false;
 	}
 });
-	
+
 
 //Upload helpers
 Template.Upzone.helpers({
 
   myCallbacks: function() {
-  	
+
     return {
     	formData: function() {
     		return {
     			id: this._id,
       			path: (arrayToPath(Session.get("pathArr"), "routeUrl") + '/')
-    		}; 
+    		};
     	},
         finished: function(index, fileInfo, context) {
         	listCall(arrayToPath(Session.get("pathArr"), "fileUrl"), function(){return null;});
-        	Meteor.call("sendRoute", arrayToPath(Session.get("pathArr"), "routeUrl"), fileInfo.name);
         }
     };
   }
 });
-

@@ -32,3 +32,5 @@ iron:router
 session
 meteorhacks:fast-render
 jparker:crypto-md5
+mrt:cookies
+thepumpinglemma:cookies

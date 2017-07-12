@@ -20,15 +20,15 @@ Meteor.startup(() => {
 
 
 Meteor.methods({
-	
+
 	//Lists all the files in a directory
 	listContents: function (path, type) {
-		
+
 		//Modify command depending on element type (folder/file)
-		var cmd = type === "folder" ? "/o:n /ad": "/a-d"; 
-		
+		var cmd = type === "folder" ? "/o:n /ad": "/a-d";
+
 		//Create new future object
-		var future = new Future();	
+		var future = new Future();
 		exec = Npm.require('child_process').exec;
 		//Asynchronously execute ls command
 		exec('chcp 65001 | dir /b ' + cmd + ' "' + upPath + path + '"',{shell: 'cmd.exe'}, function(error, stdout, stderr) {
@@ -65,37 +65,34 @@ Meteor.methods({
 
 
 	sendRoute: function(path, fileName){
-		//See if the route already exists
-	    try {
-	    	//set the route
-	    	Router.route(escape(path + '/' + fileName), function () {
-	    		var user = null;
-	    		try {
-	    			//try to find login token from request
-	    			var hashedToken = Accounts._hashLoginToken(this.request.cookies.meteor_login_token);
-			    	user = Meteor.users.findOne({"services.resume.loginTokens.hashedToken": hashedToken});
-	    		} catch(e) {
-	    			//if no login token can be found respond with a 404
-	    			this.response.writeHead(404);
-	    			this.response.end( "Access denied!" );
-	    		}
-				if (user){
-					fileSystem = require('fs');
-					var res = this.response;
-					var filePath = upPath + path.replace("/","\\") + '\\' + fileName;
-				    var readStream = fileSystem.createReadStream(filePath);
-				    readStream.pipe(res);
-				}
-				else{
-					this.response.writeHead(404);
-	    			this.response.end( "Access denied!" );
-				}
-			}, {where: 'server'});
-	    } catch(e) {
-	    	console.log(e);
-	    }
-		
-	}
+		//TODO See if the route already exists
+		//set the route
+		Router.route(escape(path + '/' + fileName), function () {
+			//Check the values in the cookies
+			var cookies = new Cookies( this.request ),
+					userId = cookies.get("meteor_user_id") || "",
+					token = cookies.get("meteor_token") || "";
 
-	
+			//Check a valid user with this token exists
+			var user = Meteor.users.findOne({
+					_id: userId,
+					'services.resume.loginTokens.hashedToken' : Accounts._hashLoginToken(token)
+			});
+			//if a user is logged in respond with data
+			if (user){
+				fileSystem = require('fs');
+				var res = this.response;
+				var filePath = upPath + path.replace("/","\\") + '\\' + fileName;
+		    var readStream = fileSystem.createReadStream(filePath);
+		    readStream.pipe(res);
+			}
+			//if a user is not logged in respond with an error message
+			else{
+				this.response.writeHead(404);
+  			this.response.end( "Access denied!" );
+			}
+	}, {where: 'server'});
+}
+
+
 });
