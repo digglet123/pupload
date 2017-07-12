@@ -195,6 +195,8 @@ Template.Info.helpers ({
 					return "premiere.png";
 				case /.psd$/i.test(element):
 					return "photoshop.png";
+        case /(.jpg$|.png$|.gif$)/i.test(element):
+					return "image.png";
 				default:
 					return "file.png";
 			}
